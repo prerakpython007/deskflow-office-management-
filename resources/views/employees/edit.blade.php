@@ -69,6 +69,26 @@
                             </select>
                         </div>
                     </div>
+                    <div class="grid gap-2">
+                        <label class="text-sm font-medium text-slate-200" for="country">Country</label>
+                        <select id="country" name="country" class="w-full rounded-3xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20">
+                            <option value="">Select Country</option>
+                        </select>
+                    </div>
+                    <div class="grid gap-5 sm:grid-cols-2">
+                        <div class="grid gap-2">
+                            <label class="text-sm font-medium text-slate-200" for="state">State</label>
+                            <select id="state" name="state" disabled class="w-full rounded-3xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-50">
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+                        <div class="grid gap-2">
+                            <label class="text-sm font-medium text-slate-200" for="city">City</label>
+                            <select id="city" name="city" disabled class="w-full rounded-3xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-50">
+                                <option value="">Select City</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <p class="text-sm text-slate-400">Changes will reflect immediately after saving.</p>
                         <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.01] hover:shadow-xl hover:shadow-cyan-500/20">
@@ -80,5 +100,95 @@
         </div>
     </div>
 </div>
+
+<script>
+    const savedCountry = "{{ $employee->country }}";
+    const savedState = "{{ $employee->state }}";
+    const savedCity = "{{ $employee->city }}";
+
+    fetch('https://countriesnow.space/api/v0.1/countries/positions')
+        .then(res => res.json())
+        .then(data => {
+            const countrySelect = document.getElementById('country');
+            data.data
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.name;
+                    option.textContent = country.name;
+                    if (country.name === savedCountry) option.selected = true;
+                    countrySelect.appendChild(option);
+                });
+
+            if (savedCountry) loadStates(savedCountry, savedState, savedCity);
+        });
+
+    function loadStates(country, preselectedState = '', preselectedCity = '') {
+        const stateSelect = document.getElementById('state');
+        const citySelect = document.getElementById('city');
+
+        stateSelect.innerHTML = '<option value="">Select State</option>';
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        stateSelect.disabled = true;
+        citySelect.disabled = true;
+
+        fetch('https://countriesnow.space/api/v0.1/countries/states', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ country: country })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.data && data.data.states) {
+                data.data.states
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.name;
+                        option.textContent = state.name;
+                        if (state.name === preselectedState) option.selected = true;
+                        stateSelect.appendChild(option);
+                    });
+                stateSelect.disabled = false;
+                if (preselectedState) loadCities(country, preselectedState, preselectedCity);
+            }
+        });
+    }
+
+    function loadCities(country, state, preselectedCity = '') {
+        const citySelect = document.getElementById('city');
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        citySelect.disabled = true;
+
+        fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ country: country, state: state })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.data) {
+                data.data.sort().forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    if (city === preselectedCity) option.selected = true;
+                    citySelect.appendChild(option);
+                });
+                citySelect.disabled = false;
+            }
+        });
+    }
+
+    document.getElementById('country').addEventListener('change', function () {
+        loadStates(this.value);
+    });
+
+    document.getElementById('state').addEventListener('change', function () {
+        const country = document.getElementById('country').value;
+        loadCities(country, this.value);
+    });
+</script>
+
 </body>
 </html>

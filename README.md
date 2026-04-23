@@ -1,59 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DeskFlow Office Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple yet powerful office management system built with Laravel, MySQL, and DataTables. DeskFlow allows you to manage companies and employees with full CRUD operations, dynamic filtering, and real-time Country/State/City selection.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend:** Laravel 13
+- **Database:** MySQL / MariaDB
+- **Frontend:** Blade Templates + Tailwind CSS (CDN)
+- **Tables:** DataTables (jQuery)
+- **External API:** CountriesNow API (Country/State/City)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## ✨ Features
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Company Management** — Create, view, edit and delete companies
+- **Employee Management** — Create, view, edit and delete employees
+- **Manager Self-Reference** — An employee can be assigned as a manager of other employees
+- **DataTables Integration** — Pagination, search, and filtering on employee listings
+- **Filter by Company & Position** — Quickly filter employees by their company or job position
+- **Country / State / City Dropdowns** — Dynamic location selection powered by the CountriesNow API
+- **Success Notifications** — Flash messages on create, update and delete actions
+- **Responsive UI** — Clean dark-themed interface built with Tailwind CSS
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## ⚙️ Setup Instructions
 
-## Agentic Development
+### Prerequisites
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Make sure you have the following installed:
+
+- PHP 8.1 or higher
+- Composer
+- MySQL or MariaDB
+- Git
+
+### Step 1 — Clone the Repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/your-username/deskflow-office-management.git
+cd deskflow-office-management
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Step 2 — Install Dependencies
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Step 3 — Create Environment File
 
-## Code of Conduct
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Step 4 — Configure Database
 
-## Security Vulnerabilities
+Open `.env` and update the database section:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=deskflow
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+```
 
-## License
+### Step 5 — Create Database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# deskflow-office-management-
+Log into MySQL and create the database:
+
+```bash
+mysql -u root -p -h 127.0.0.1
+```
+
+```sql
+CREATE DATABASE deskflow;
+EXIT;
+```
+
+### Step 6 — Run Migrations
+
+```bash
+php artisan migrate
+```
+
+### Step 7 — Start the Development Server
+
+```bash
+php artisan serve
+```
+
+Visit `http://127.0.0.1:8000` in your browser.
+
+---
+
+## 📁 Project Structure
+
+deskflow-office-management/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── CompanyController.php
+│   │   └── EmployeeController.php
+│   └── Models/
+│       ├── Company.php
+│       └── Employee.php
+├── database/
+│   └── migrations/
+├── resources/
+│   └── views/
+│       ├── companies/
+│       │   ├── index.blade.php
+│       │   ├── create.blade.php
+│       │   └── edit.blade.php
+│       └── employees/
+│           ├── index.blade.php
+│           ├── create.blade.php
+│           └── edit.blade.php
+└── routes/
+└── web.php
+
+
+---
+
+## 🗄️ Database Schema
+
+### Companies Table
+| Column | Type |
+|---|---|
+| id | Primary Key |
+| name | String |
+| location | String (nullable) |
+| created_at | Timestamp |
+| updated_at | Timestamp |
+
+### Employees Table
+| Column | Type |
+|---|---|
+| id | Primary Key |
+| name | String |
+| email | String (unique) |
+| position | String (nullable) |
+| company_id | Foreign Key → companies |
+| manager_id | Foreign Key → employees (self) |
+| country | String (nullable) |
+| state | String (nullable) |
+| city | String (nullable) |
+| created_at | Timestamp |
+| updated_at | Timestamp |
+
+---
+
+## 🌐 External API
+
+This project uses the **CountriesNow API** for dynamic Country, State, and City dropdowns during employee creation and editing.
+
+- API Base URL: `https://countriesnow.space/api/v0.1`
+- No API key required
+- Endpoints used:
+  - `GET /countries/positions` — Fetch all countries
+  - `POST /countries/states` — Fetch states by country
+  - `POST /countries/state/cities` — Fetch cities by country and state
+
+---
+
+## 📝 Notes
+
+- No API key is required for the CountriesNow API
+- Tailwind CSS is loaded via CDN — no build step required
+- DataTables is loaded via CDN — no npm installation required
+- The manager field is self-referencing — any employee can be assigned as a manager
+
+---
+
+## 👨‍💻 Author
+
+Built as part of an office management system assignment using Laravel and MySQL.

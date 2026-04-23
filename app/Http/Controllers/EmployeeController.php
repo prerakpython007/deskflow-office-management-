@@ -12,7 +12,7 @@ class EmployeeController extends Controller
     {
         $employees = Employee::with(['company', 'manager'])->get();
         $companies = Company::all();
-        return view('employees.index', compact('employees'));
+        return view('employees.index', compact('employees', 'companies'));
     }
 
     public function create()
