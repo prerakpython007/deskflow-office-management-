@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
+
 class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         //
+         $companies = Company::all();
+    return view('companies.index', compact('companies'));
     }
 
     /**
@@ -21,6 +25,7 @@ class CompanyController extends Controller
     public function create()
     {
         //
+          return view('companies.create');
     }
 
     /**
@@ -29,6 +34,8 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         //
+         Company::create($request->all());
+    return redirect()->route('companies.index');
     }
 
     /**
