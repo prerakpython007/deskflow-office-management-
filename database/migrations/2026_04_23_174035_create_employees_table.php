@@ -13,7 +13,19 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+$table->string('name');
+$table->string('email')->unique();
+$table->string('position')->nullable();
+
+$table->foreignId('company_id')->constrained()->onDelete('cascade');
+
+$table->foreignId('manager_id')->nullable()->constrained('employees')->nullOnDelete();
+
+$table->string('country')->nullable();
+$table->string('state')->nullable();
+$table->string('city')->nullable();
+
+$table->timestamps();
         });
     }
 
